@@ -17,20 +17,28 @@ def pytest_unconfigure():
 
         result_date["during"] = result_date["end"] - result_date["start"]
 
+        send(mes_data)
 
-        url = "https://oapi.dingtalk.com/robot/send?access_token=6deb48ff96240e5e55d8d081ab4cb551fffa8169c924cbd472bac6c81edbc40d"
+mes_data = f"""
+测试时间：{result_date["start"]}
+测试用例数量：{int(result_date["passed"])+int(result_date["failed"])}
+测试用时：{result_date["during"]}
+通过数量：{result_date["passed"]}
+失败数量：{result_date["failed"]}
+"""
+def send(mes_data):
         head = {"content-type": "application/json"}
         date = {
           "msgtype": "text",
           "text": {
-            "content": "这是一条测试消息\n"
+            "content": mes_data
           },
           "at": {
             "isAtAll": True,
             "atMobiles": []
           }
         }
-        res = requests.post(url, headers=head, data=json.dumps(date))
+        res = requests.post(url=result_date["api"], headers=head, data=json.dumps(date))
         print(res.text)
 
 def pytest_addoption(parser):
@@ -38,3 +46,8 @@ def pytest_addoption(parser):
         "send_api",
         help="钉钉发送消息地址"
     )
+
+
+def pytest_report_teststatus(report):
+    if report.when == "call":
+        result_date[report.outcome] += 1
