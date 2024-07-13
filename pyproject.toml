@@ -1,0 +1,28 @@
+[project]
+name = "real_start"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [
+    {name = "赵晓飞", email = "714671267@qq.com"},
+]
+dependencies = [
+    "pytest>=8.2.2",
+    "requests>=2.32.3",
+]
+requires-python = ">=3.10"
+readme = "README.md"
+license = {text = "MIT"}
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+
+[tool.pdm]
+distribution = true
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "black>=24.4.2",
+    "isort>=5.13.2",
+]
